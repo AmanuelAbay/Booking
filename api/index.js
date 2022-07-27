@@ -14,7 +14,7 @@ dotenv.config();
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
-    console.log("Connected to mongoDB.");
+    console.log("mongoDB connected.");
   } catch (error) {
     throw error;
   }
@@ -45,7 +45,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(8800, () => {
+app.listen(process.env.PORT, () => {
   connect();
-  console.log("Connected to backend.");
+  console.log(`server is started on PORT ${process.env.PORT} ... `);
 });

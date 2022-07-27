@@ -9,6 +9,7 @@ export const register = async (req, res, next) => {
     const hash = bcrypt.hashSync(req.body.password, salt);
 
     const newUser = new User({
+      // getting other attributes on ... property
       ...req.body,
       password: hash,
     });

@@ -30,7 +30,10 @@ export const getUser = async (req,res,next)=>{
 }
 export const getUsers = async (req,res,next)=>{
   try {
+    // console.log("getUsers function is called!! ");
     const users = await User.find();
+    // console.log("users from DB ");
+    // console.log(users);
     res.status(200).json(users);
   } catch (err) {
     next(err);
