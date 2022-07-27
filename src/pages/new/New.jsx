@@ -3,9 +3,45 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
+import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 
 const New = ({ inputs, title }) => {
   const [file, setFile] = useState("");
+  const [info, setInfo] = useState({});
+  // const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+  };
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    // firstly we are gonna upload the image here
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "upload");
+    
+    try {
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/amanuel/image/upload",
+        data
+      );
+      const { url } = uploadRes.data;
+
+      
+      const newUser = {
+        ...info,
+        img: url,
+      };
+      axios.post("/auth/register", newUser);
+
+      // navigate("/user");
+    } catch (error) {
+      alert("registration failed!!");
+      console.log(error);
+    }
+  };
 
   return (
     <div className="new">
@@ -43,10 +79,15 @@ const New = ({ inputs, title }) => {
               {inputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
-                  <input type={input.type} placeholder={input.placeholder} />
+                  <input
+                    onChange={handleChange}
+                    type={input.type}
+                    placeholder={input.placeholder}
+                    id={input.id}
+                  />
                 </div>
               ))}
-              <button>Send</button>
+              <button onClick={handleClick}>Send</button>
             </form>
           </div>
         </div>
